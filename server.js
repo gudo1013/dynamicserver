@@ -77,6 +77,16 @@ app.get('/energy/:selected_energy_source', (req, res) => {
         // modify `template` and send response
         // this will require a query to the SQL database
 
+        let energy_source = req.params.selected_energy_source;
+
+        db.all('SELECT * from Consumption WHERE ' + energy_source + ' = ?', [energy_source], (err, rows) => { // this line is not correct
+            
+            res.status(200).type('html').send(response); // is this correct thing / time to send right here
+        });
+
+        
+
+
         res.status(200).type('html').send(template); // <-- you may need to change this
     });
 });
