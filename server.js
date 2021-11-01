@@ -39,8 +39,23 @@ app.get('/year/:selected_year', (req, res) => {
     fs.readFile(path.join(template_dir, 'year.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
+        if (err) {
+            res.status(404).send('404 Error not found');
+        } else {
+            let year_response = data.replace('{{{YEAR}}}', req.params.selected_year);
 
-        res.status(200).type('html').send(template); // <-- you may need to change this
+            db.all('SELECT * from Consumption WHERE year = ?', [req.params.selected_year], (err, rows) => {
+                let coal_response = data.replace('{{{COAL_COUNT}}}', rows[0].coal); // rows[0] has all elements, rows[0].coal is the coal value
+                let natural_gas_reponse = data.replace('{{{NATURAL_GAS_COUNT}}}', rows[0].natural_gas);
+                let nuclear_response = data.replace('{{{NUCLEAR_COUNT}}}', rows[0].nuclear);
+                let petroleum_reponse = data.replace('{{{PETROLEUM_COUNT}}}', rows[0].petroleum);
+                let renewable_reponse = data.replace('{{{RENEWABLE_COUNT}}}', rows[0].renewable);
+                res.status(200).type('html').send(response); // is this correct thing / time to send right here
+            });
+
+
+            //res.status(200).type('html').send(template); // <-- you may need to change this
+        }
     });
 });
 
