@@ -25,31 +25,40 @@
         <canvas id="myChart"></canvas>
     </div>
 
-    <script>
+    <script type="application/javascript">
+        //let year = 2001;
         let myChart = document.getElementById('myChart').getContext('2d');
         let massPopChart = new Chart(myChart, {
-            type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+            type: 'pie', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
             data: {
-                labels:['Boston', 'SpringField'],
+                labels:['coal', 'natural', 'nuclear', 'petroleum', 'renewable'],
                 datasets:[{
-                    label:'Population',
+                    label:'Total Energy',
                     data:[
-                        617594,
-                        181045
+                        coal_count,
+                        natural_gas_count,
+                        nuclear_count,
+                        petroleum_count,
+                        renewable_count
                     ],
                     //backgroundColor: 'blue'
                     backgroundColor: [
                         'green', 
-                        'blue'
+                        'blue',
+                        'yellow',
+                        'red',
+                        'purple'
                     ]
                 }]
             },
             options: {}
         });
+        console.log(year)
+        console.log(coal_count)
     </script>
 
     
-    <h1> Year is: {{{YEARS}}}</h1>
+    <h1> Year is: {{{YEAR}}}</h1>
     <!-- create template here 
     <h1> Coal is: {{{COAL_COUNT}}} </h1>
     <h1> Natural Gas is: {{{NATURAL_GAS_COUNT}}}</h1>

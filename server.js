@@ -47,14 +47,14 @@ app.get('/year/:selected_year', (req, res) => {
             res.status(404).send('404 Error not found');
         } else {
 
-            let response = template.replace('{{{YEARS}}}', req.params.selected_year);
+            let response = template.replace(/{{{YEAR}}}/g, req.params.selected_year);
             db.all('SELECT * from Consumption WHERE year = ?', [req.params.selected_year], (err, row) => {
 
 
                 if (err) {
                     res.status(404).send("Could not finish query");
                 } else {
-                //response = response.replace('{{{COAL_COUNT}}}', row[0].coal); 
+                //response = response.replace(/{{{COAL_COUNT}}}/g, row[0].coal); 
                 //response = response.replace('{{{NATURAL_GAS_COUNT}}}', row[0].natural_gas);
                 //response = response.replace('{{{NUCLEAR_COUNT}}}', row[0].nuclear);
                 //response = response.replace('{{{PETROLEUM_COUNT}}}', row[0].petroleum);
@@ -63,11 +63,29 @@ app.get('/year/:selected_year', (req, res) => {
                     //console.log(rows[0])
                     let i;
                     let list_items= '';
+                    let coal_total = 0;
+                    let natural_total = 0;
+                    let nuclear_total = 0;
+                    let petroleum_total = 0;
+                    let renewable_total = 0;
                     for (i = 0; i < rows.length; i++) {
+                        coal_total = coal_total + parseInt(row[i].coal);
+                        natural_total = natural_total + parseInt(row[i].natural_gas);
+                        nuclear_total = nuclear_total + parseInt(row[i].nuclear);
+                        petroleum_total = petroleum_total + parseInt(row[i].petroleum);
+                        renewable_total = renewable_total + parseInt(row[i].renewable);
                         let total = parseInt(row[i].coal) + parseInt(row[i].natural_gas) + parseInt(row[i].nuclear) + parseInt(row[i].petroleum) + parseInt(row[i].renewable);
                         list_items += '<tr><td>' + rows[i].state_name + '</td>\n' + '<td>' + row[i].coal + '</td>\n' + '<td>' + row[i].natural_gas + '</td>\n' + '<td>' + row[i].nuclear + '</td>\n' + '<td>' + row[i].petroleum + '</td>\n' + '<td>' + row[i].renewable + '</td>\n' + '<td>' + total + '</td></tr>\n';
                     }
+                    
+                    response = response.replace(/{{{COAL_COUNT}}}/g, coal_total); 
+                    response = response.replace(/{{{NATURAL_GAS_COUNT}}}/g, natural_total);
+                    response = response.replace(/{{{NUCLEAR_COUNT}}}/g, nuclear_total);
+                    response = response.replace(/{{{PETROLEUM_COUNT}}}/g, petroleum_total);
+                    response = response.replace(/{{{RENEWABLE_COUNT}}}/g, renewable_total);
+
                     response = response.replace('{{{STATES}}}', list_items);
+                    //console.log(response);
                     res.status(200).type('html').send(response); 
 
                 });
@@ -90,7 +108,6 @@ app.get('/state/:selected_state', (req, res) => {
         else {
             let response = template.toString();
             response = response.replace(/{{{STATE}}}/g, "Alaska");
-            console.log(response);
             res.status(200).type('html').send(response);
         }//else
 
