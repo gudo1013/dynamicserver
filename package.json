@@ -22,7 +22,9 @@
         "url": "https://github.com/gudo1013/dynamicserver.git"
     },
     "dependencies": {
+        "chart.js": "^3.6.0",
         "express": "^4.17.1",
+        "plotly.js-dist": "^2.6.2",
         "sqlite3": "^5.0.2"
     }
 }

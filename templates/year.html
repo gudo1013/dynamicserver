@@ -5,19 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>US Energy Consumption</title>
     <link rel="stylesheet" href="css/style.css">
-    <script type="application/javascript">
-        // `year` and total counts for entire US => set these variables equal to appropriate value
-        //   * these variables will be defined and accessible from any script loaded after this one
-        var year = {{{YEAR}}};
-        var coal_count = {{{COAL_COUNT}}};
-        var natural_gas_count = {{{NATURAL_GAS_COUNT}}};
-        var nuclear_count = {{{NUCLEAR_COUNT}}};
-        var petroleum_count = {{{PETROLEUM_COUNT}}};
-        var renewable_count = {{{RENEWABLE_COUNT}}};
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   
+    
 </head>
+
+
 <body>
+    
+    <div class="container">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+        let myChart = document.getElementById('myChart').getContext('2d');
+        let massPopChart = new Chart(myChart, {
+            type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+            data: {
+                labels:['Boston', 'SpringField'],
+                datasets:[{
+                    label:'Population',
+                    data:[
+                        617594,
+                        181045
+                    ],
+                    //backgroundColor: 'blue'
+                    backgroundColor: [
+                        'green', 
+                        'blue'
+                    ]
+                }]
+            },
+            options: {}
+        });
+    </script>
+
     <!-- create template here -->
-    <h1>Echo: {{{YEAR}}} , {{{COAL_COUNT}}}, {{{NATURAL_GAS_COUNT}}}, {{{NUCLEAR_COUNT}}}, {{{PETROLEUM_COUNT}}}, {{{RENEWABLE_COUNT}}}</h1>
+    <h1> Year is: {{{YEAR}}}</h1>
+    <h1> Coal is: {{{COAL_COUNT}}} </h1>
+    <h1> Natural Gas is: {{{NATURAL_GAS_COUNT}}}</h1>
+    <h1>Nuclear is: {{{NUCLEAR_COUNT}}}</h1>
+    <h1>Petroleum is: {{{PETROLEUM_COUNT}}}</h1>
+    <h1>Renewable is: {{{RENEWABLE_COUNT}}}</h1>
+
+
+<table>
+
+    <tr>
+        <th>Coal</th>
+        <th>Natural Gas</th>
+        <th>Nuclear</th>
+        <th>Petroleum</th>
+        <th>Renewable</th>
+    </tr>
+    <tr>
+        <td>Coal 1</td>
+        <td>Natural Gas 1</td>
+        <td>Nuclear 1</td>
+        <td>Petroleum 1</td>
+        <td>Renewable 1</td>
+    </tr>
+</table>
+
 </body>
 </html>
