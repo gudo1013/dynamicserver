@@ -46,6 +46,7 @@ app.get('/year/:selected_year', (req, res) => {
         if (err) {
             res.status(404).send('404 Error not found');
         } else {
+            console.log(typeof template)
             let response = template.replace('{{{YEAR}}}', req.params.selected_year);
 
             db.all('SELECT * from Consumption WHERE year = ?', [req.params.selected_year], (err, rows) => {
@@ -71,8 +72,17 @@ app.get('/state/:selected_state', (req, res) => {
     fs.readFile(path.join(template_dir, 'state.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
+        if (err) {
+            res.status(404).send('404 Error not found');
+        }//if
+        else {
+            let response = template.toString();
+            response = response.replace(/{{{STATE}}}/g, "Alaska");
+            console.log(response);
+            res.status(200).type('html').send(response);
+        }//else
 
-        res.status(200).type('html').send(template); // <-- you may need to change this
+        // <-- you may need to change this
     });
 });
 
