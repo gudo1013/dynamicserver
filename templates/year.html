@@ -6,8 +6,16 @@
     <title>US Energy Consumption</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   
-    
+    <script type="application/javascript">
+        // `year` and total counts for entire US => set these variables equal to appropriate value
+            //  * these variables will be defined and accessible from any script loaded after this one
+            var year = {{{YEAR}}};
+            var coal_count = {{{COAL_COUNT}}};
+            var natural_gas_count = {{{NATURAL_GAS_COUNT}}};
+            var nuclear_count = {{{NUCLEAR_COUNT}}};
+            var petroleum_count = {{{PETROLEUM_COUNT}}};
+            var renewable_count = {{{RENEWABLE_COUNT}}};
+    </script>
 </head>
 
 
@@ -40,30 +48,35 @@
         });
     </script>
 
-    <!-- create template here -->
-    <h1> Year is: {{{YEAR}}}</h1>
+    
+    <h1> Year is: {{{YEARS}}}</h1>
+    <!-- create template here 
     <h1> Coal is: {{{COAL_COUNT}}} </h1>
     <h1> Natural Gas is: {{{NATURAL_GAS_COUNT}}}</h1>
     <h1>Nuclear is: {{{NUCLEAR_COUNT}}}</h1>
     <h1>Petroleum is: {{{PETROLEUM_COUNT}}}</h1>
-    <h1>Renewable is: {{{RENEWABLE_COUNT}}}</h1>
+    <h1>Renewable is: {{{RENEWABLE_COUNT}}}</h1>-->
 
 
 <table>
 
     <tr>
+        <th>State</th>
         <th>Coal</th>
         <th>Natural Gas</th>
         <th>Nuclear</th>
         <th>Petroleum</th>
         <th>Renewable</th>
+        <th>Total</th>
     </tr>
     <tr>
-        <td>Coal 1</td>
-        <td>Natural Gas 1</td>
-        <td>Nuclear 1</td>
-        <td>Petroleum 1</td>
-        <td>Renewable 1</td>
+        <td>{{{STATES}}}</td>
+        <td>{{{STATE_COAL}}}</td>
+        <td>{{{STATE_NATURAL}}}</td>
+        <td>{{{STATE_NUCLEAR</td>
+        <td>{{{STATE_PETROLEUM}}}</td>
+        <td>{{{STATE_RENEWABLE}}}</td>
+        <td>{{{STATE_TOTAL}}}</td>
     </tr>
 </table>
 
