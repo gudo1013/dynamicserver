@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>US Energy Consumption</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="application/javascript">
         // `year` and total counts for entire US => set these variables equal to appropriate value
@@ -21,7 +21,7 @@
 
 <body>
     
-    <div class="container">
+    <div class="container" >
         <canvas id="myChart"></canvas>
     </div>
 
@@ -31,7 +31,7 @@
         let massPopChart = new Chart(myChart, {
             type: 'pie', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
             data: {
-                labels:['coal', 'natural', 'nuclear', 'petroleum', 'renewable'],
+                labels:['Coal', 'Natural', 'Nuclear', 'Petroleum', 'Renewable'],
                 datasets:[{
                     label:'Total Energy',
                     data:[
@@ -51,14 +51,22 @@
                     ]
                 }]
             },
-            options: {}
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true, 
+                        text: 'Total Energy Consumption'
+                    }
+                }
+            }
         });
         console.log(year)
         console.log(coal_count)
     </script>
 
     
-    <h1> Year is: {{{YEAR}}}</h1>
+    <h1> Year: {{{YEAR}}}</h1>
     <!-- create template here 
     <h1> Coal is: {{{COAL_COUNT}}} </h1>
     <h1> Natural Gas is: {{{NATURAL_GAS_COUNT}}}</h1>
@@ -80,12 +88,7 @@
     </tr>
     <tr>
         <td>{{{STATES}}}</td>
-        <td>{{{STATE_COAL}}}</td>
-        <td>{{{STATE_NATURAL}}}</td>
-        <td>{{{STATE_NUCLEAR</td>
-        <td>{{{STATE_PETROLEUM}}}</td>
-        <td>{{{STATE_RENEWABLE}}}</td>
-        <td>{{{STATE_TOTAL}}}</td>
+        
     </tr>
 </table>
 
