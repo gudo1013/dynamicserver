@@ -20,7 +20,44 @@
 
 
 <body>
-    
+    <div class="navigation">
+        <div class="dropdown">
+            <button class="dropbtn">Year</button>
+            <ul class="dropdown-content" id="dropdown-year">
+                
+            </ul>
+            <script>
+                let element = document.getElementById("dropdown-year");
+                for(i=1960; i<2019; i++){
+                    let new_li = document.createElement("li");
+                    let new_link = document.createElement("a")
+                    new_link.textContent = i;
+                    new_link.href = i;
+                    new_li.appendChild(new_link)
+                    element.appendChild(new_li);
+                }
+            </script>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">State</button>
+            <div class="dropdown-content">
+                <a href="1960">Year</a>
+                <a href="1961">1961</a>
+                <a href="1962">1962</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">Energy Source</button>
+            <div class="dropdown-content">
+                <a href="/energy/coal">Coal</a>
+                <a href="/energy/naturalgas">Natural Gas</a>
+                <a href="/energy/nuclear">Nuclear</a>
+                <a href="/energy/petroleum">Petroleum</a>
+                <a href="/engery/renewable">Renewable</a>
+            </div>
+        </div>
+    </div>
+
     <div class="container" >
         <canvas id="myChart"></canvas>
     </div>

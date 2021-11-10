@@ -125,14 +125,10 @@ app.get('/energy/:selected_energy_source', (req, res) => {
         let energy_source = req.params.selected_energy_source;
 
         db.all('SELECT * from Consumption WHERE ' + energy_source + ' = ?', [energy_source], (err, rows) => { // this line is not correct
-            
+            let response = template.toString();
             res.status(200).type('html').send(response); // is this correct thing / time to send right here
         });
 
-        
-
-
-        res.status(200).type('html').send(template); // <-- you may need to change this
     });
 });
 
