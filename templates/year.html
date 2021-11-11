@@ -32,7 +32,7 @@
                     let new_li = document.createElement("li");
                     let new_link = document.createElement("a")
                     new_link.textContent = i;
-                    new_link.href = i;
+                    new_link.href = "/year/" + i;
                     new_li.appendChild(new_link)
                     element.appendChild(new_li);
                 }
@@ -40,11 +40,23 @@
         </div>
         <div class="dropdown">
             <button class="dropbtn">State</button>
-            <div class="dropdown-content">
-                <a href="1960">Year</a>
-                <a href="1961">1961</a>
-                <a href="1962">1962</a>
-            </div>
+            <ul class="dropdown-content" id="dropdown-state">
+        
+            </ul>
+            <script>
+                let states = ["Alaska", "Alabama", "Arkansas", "Arizona", "California", "Colorado", "Connecticut", "District of Columbia", "Delaware", "Florida", "Georgia", "Hawaii", "Iowa", "Idaho", "Illinois", "Indiana", "Kansas", "Kentucky", "Louisiana", "Massachusetts", "Maryland", "Maine", "Michigan", "Minnesota", "Missouri", "Mississippi", "Montana", "North Carolina", "North Dakota", "Nebraska", "New Hampshire", "New Jersey", "New Mexico", "Nevada", "New York", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Virginia",  "Vermont", "Washington", "Wisconsin", "West Virginia", "Wyoming"]
+                let states_abbrev = [ "AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","VT","WA","WI","WV","WY"]
+                let element_state = document.getElementById("dropdown-state");
+                for(i=0; i<51; i++){
+                    let new_li = document.createElement("li");
+                    let new_link = document.createElement("a")
+                    new_link.textContent = states[i];
+                    new_link.href = "/state/" + states_abbrev[i];
+                    console.log(new_link)
+                    new_li.appendChild(new_link)
+                    element_state.appendChild(new_li);
+                }
+            </script>
         </div>
         <div class="dropdown">
             <button class="dropbtn">Energy Source</button>
@@ -53,7 +65,7 @@
                 <a href="/energy/naturalgas">Natural Gas</a>
                 <a href="/energy/nuclear">Nuclear</a>
                 <a href="/energy/petroleum">Petroleum</a>
-                <a href="/engery/renewable">Renewable</a>
+                <a href="/energy/renewable">Renewable</a>
             </div>
         </div>
     </div>
