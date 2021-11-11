@@ -49,7 +49,7 @@ app.get('/year/:selected_year', (req, res) => {
         } else {
 
             let response = template.replace(/{{{YEAR}}}/g, req.params.selected_year);
-            db.all('SELECT * from Consumption WHERE year = ?', [req.params.selected_year], (err, row) => {
+            db.all('SELECT * from Consumption WHERE year = ? ORDER BY state_abbreviation', [req.params.selected_year], (err, row) => {
 
 
                 if (err) {
@@ -109,7 +109,7 @@ app.get('/state/:selected_state', (req, res) => {
         else {
 
 
-            db.all('SELECT * from Consumption WHERE state_abbreviation =?', [req.params.selected_state.toUpperCase()], (err, rows) => {
+            db.all('SELECT * from Consumption WHERE state_abbreviation =? ORDER BY year', [req.params.selected_state.toUpperCase()], (err, rows) => {
                 let response = template.toString();
                 //console.log(rows[0].coal);
 
@@ -189,12 +189,12 @@ app.get('/energy/:selected_energy_source', (req, res) => {
     
                         for (i = 0; i < row.length; i++) {
     
-                            list_items += '<th>' +  row[i].state_name + '</th>';
+                            list_items += '<th>' +  row[i].state_abbreviation + '</th>';
     
                         }
     
                         response = response.replace(/{{{HEADER}}}/g, list_items);
-                        list_items = '<td></td>';
+                        list_items = '';
     
     
                         for (j = 0; j < years.length; j++) {
@@ -205,7 +205,7 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                             for (i = 0; i < 51; i++) {
     
                                 
-                                list_items += '<td>' + rows[(j*51) + i].coal + '</td>';
+                                list_items += '<td>' + rows[(j*51) + i][energy_source] + '</td>';
                             }
                             list_items += '</tr>';
                         }
