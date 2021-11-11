@@ -17,7 +17,7 @@ table, th, td {
 }
 
 h1 {
-
+    display: inline;
     text-align: center;
     
 }
@@ -67,3 +67,19 @@ h1 {
 .dropdown-content a:hover {background-color: lightgray;}
 .dropdown:hover .dropdown-content {display: block;}
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+#energy_container {
+    position: relative;
+    height: 700px;
+}
+
+.energy_table{
+    margin:auto;
+    max-width: 1000px;
+    overflow-x: auto;
+}
+
+.prevnext{
+    margin:auto;
+    text-align: center;
+}

@@ -127,8 +127,6 @@ app.get('/state/:selected_state', (req, res) => {
                     let nuclear_total = [];
                     let petroleum_total = [];
                     let renewable_total = [];
-                    console.log(rows[0].year);
-                    console.log(rows[0].coal);
                     for (i = 0; i < rows.length; i++) {
                         year_list.push('' + rows[i].year);
                         coal_total.push(rows[i].coal);

@@ -21,6 +21,7 @@
 
 <body>
     <div class="navigation">
+        
         <div class="dropdown">
             <button class="dropbtn">Year</button>
             <ul class="dropdown-content" id="dropdown-year">
@@ -52,7 +53,6 @@
                     let new_link = document.createElement("a")
                     new_link.textContent = states[i];
                     new_link.href = "/state/" + states_abbrev[i];
-                    console.log(new_link)
                     new_li.appendChild(new_link)
                     element_state.appendChild(new_li);
                 }
@@ -110,12 +110,40 @@
                 }
             }
         });
-        console.log(year)
-        console.log(coal_count)
     </script>
 
+    <div class="prevnext">
+            <div id="prev" style="display: inline;">
+
+            </div>
+            <h1> Year: {{{YEAR}}}</h1>
+            
+            <div id="next" style="display: inline;">
+
+            </div>
+            <script type='application/javascript'>
+                //seemingly way more complicated than it needed to be but it works
+                let prev = document.getElementById('prev');
+                let next = document.getElementById('next');
+                let prev_value = parseInt(year)-1;
+                let next_value = parseInt(year)+1;
+                if(prev_value < 1960){prev_value = 2018;}
+                if(next_value > 2018){next_value = 1960;}
+                let new_prev = document.createElement("a")
+                let new_next = document.createElement("a")
+                new_prev.href = '/year/' + prev_value;
+                new_next.href = '/year/' + next_value;
+                let prev_button = document.createElement('button');
+                let next_button = document.createElement('button');
+                prev_button.textContent = 'Prev';
+                next_button.textContent = 'Next';
+                new_prev.appendChild(prev_button)
+                new_next.appendChild(next_button)
+                prev.appendChild(new_prev);
+                next.appendChild(new_next);
+            </script>
+        </div>
     
-    <h1> Year: {{{YEAR}}}</h1>
     <!-- create template here 
     <h1> Coal is: {{{COAL_COUNT}}} </h1>
     <h1> Natural Gas is: {{{NATURAL_GAS_COUNT}}}</h1>

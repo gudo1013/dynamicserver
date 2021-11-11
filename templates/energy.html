@@ -65,7 +65,7 @@
     </div>
 
 
-    <div class="container" >
+    <div class="container" id="energy_container">
         <canvas id="myChart"></canvas>
     </div>
 
@@ -76,10 +76,8 @@
             type: 'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
             data: {
                 labels:[{{{YEAR_LIST}}}],
-                datasets:[{
-                    label:[
-                    ],
-                }]
+                datasets:[
+                    ]
             },
             options: {
                 maintainAspectRatio: false,
@@ -92,25 +90,62 @@
             }
         });
 
-        console.log(energy_counts.AK)
-        for( let i = 0; i<energy_counts.length; i++){
-            massPopChart.data.label.push(energy_counts[i].keys());
-            console.log(energy_counts[i].keys())
+        //populate data into graph
+        for( let i = 0; i<Object.keys(energy_counts).length; i++){
+            new_data = {};
+            new_data['label'] = Object.keys(energy_counts)[i];
+            new_data['data'] = energy_counts[Object.keys(energy_counts)[i]];
+            new_data['backgroundColor'] = 'rgb(' + (Math.random()*255) + ', ' + (Math.random()*255) + ', ' + (Math.random()*255) + ')'
+            massPopChart.data.datasets.push(new_data);
         }
-        
-
     </script>
 
+<div class="prevnext">
+    <div id="prev" style="display: inline;">
 
-    <table>
+    </div>
+    <h1 style="text-transform: capitalize;">{{{ENERGY_TYPE}}}</h1>
+    
+    <div id="next" style="display: inline;">
 
-        <tr>
-            {{{HEADER}}}
-        </tr>
-        <tr>
-            {{{YEARS}}}
-        </tr>
-    </table>
+    </div>
+    <script type='application/javascript'>
+        //seemingly way more complicated than it needed to be but it works
+        let prev = document.getElementById('prev');
+        let next = document.getElementById('next');
+        let sources = ['coal', 'natural_gas', 'nuclear', 'petroleum', 'renewable']
+        let index = sources.indexOf(energy_type)
+        let prev_value = index-1;
+        if(prev_value == -1){prev_value=4;}
+        let next_value = (index+1)%5;
+        let new_prev = document.createElement("a")
+        let new_next = document.createElement("a")
+        new_prev.href = '/energy/' + sources[prev_value];
+        new_next.href = '/energy/' + sources[next_value];
+        let prev_button = document.createElement('button');
+        let next_button = document.createElement('button');
+        prev_button.textContent = 'Prev';
+        next_button.textContent = 'Next';
+        new_prev.appendChild(prev_button)
+        new_next.appendChild(next_button)
+        prev.appendChild(new_prev);
+        next.appendChild(new_next);
+    </script>
+</div>
+
+
+    <div class="energy_table">
+        <table >
+
+            <tr>
+                {{{HEADER}}}
+            </tr>
+            
+            <tr>
+                {{{YEARS}}}
+            </tr>
+        </table>
+    </div>
 
 
 
