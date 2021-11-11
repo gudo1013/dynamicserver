@@ -106,9 +106,55 @@ app.get('/state/:selected_state', (req, res) => {
             res.status(404).send('404 Error not found');
         }//if
         else {
-            let response = template.toString();
-            response = response.replace(/{{{STATE}}}/g, "Alaska");
-            res.status(200).type('html').send(response);
+
+
+            db.all('SELECT * from Consumption WHERE state_abbreviation =?', [req.params.selected_state.toUpperCase()], (err, rows) => {
+                let response = template.toString();
+                //console.log(rows[0].coal);
+
+                //let k;
+                //for (k = 0; k < 100; k++) {
+                //    console.log(rows[k]);
+                //}
+
+                let i;
+                    let list_items= '';
+                    let year = "";
+                    let coal_total = 0;
+                    let natural_total = 0;
+                    let nuclear_total = 0;
+                    let petroleum_total = 0;
+                    let renewable_total = 0;
+                    console.log(rows[0].year);
+                    console.log(rows[0].coal);
+                    for (i = 0; i < rows.length; i++) {
+                        coal_total = coal_total + parseInt(rows[i].coal);
+                        natural_total = natural_total + parseInt(rows[i].natural_gas);
+                        nuclear_total = nuclear_total + parseInt(rows[i].nuclear);
+                        petroleum_total = petroleum_total + parseInt(rows[i].petroleum);
+                        renewable_total = renewable_total + parseInt(rows[i].renewable);
+                        let total = parseInt(rows[i].coal) + parseInt(rows[i].natural_gas) + parseInt(rows[i].nuclear) + parseInt(rows[i].petroleum) + parseInt(rows[i].renewable);
+                        list_items += '<tr><td>' +  rows[i].year + '</td>\n' + '<td>' + rows[i].coal + '</td>\n' + '<td>' + rows[i].natural_gas + '</td>\n' + '<td>' + rows[i].nuclear + '</td>\n' + '<td>' + rows[i].petroleum + '</td>\n' + '<td>' + rows[i].renewable + '</td>\n' + '<td>' + total + '</td></tr>\n';
+                    }
+
+
+                console.log(coal_total);
+                response = response.replace(/{{{YEAR}}}/g, year);
+                response = response.replace(/{{{COAL_COUNTS}}}/g, coal_total); 
+                response = response.replace(/{{{NATURAL_GAS_COUNTS}}}/g, natural_total);
+                response = response.replace(/{{{NUCLEAR_COUNTS}}}/g, nuclear_total);
+                response = response.replace(/{{{PETROLEUM_COUNTS}}}/g, petroleum_total);
+                response = response.replace(/{{{RENEWABLE_COUNTS}}}/g, renewable_total);    
+                response = response.replace(/{{{STATE}}}/g, req.params.selected_state.toUpperCase());
+                console.log(list_items[0]);
+                response = response.replace('{{{YEARS}}}', list_items);
+                res.status(200).type('html').send(response);
+
+
+            });
+
+
+            
         }//else
 
         // <-- you may need to change this
@@ -123,12 +169,41 @@ app.get('/energy/:selected_energy_source', (req, res) => {
         // this will require a query to the SQL database
 
         let energy_source = req.params.selected_energy_source;
+    
 
-        db.all('SELECT * from Consumption WHERE ' + energy_source + ' = ?', [energy_source], (err, rows) => { // this line is not correct
+        db.all('SELECT year, state_abbreviation, ' + energy_source + ' FROM Consumption', (err, rows) => {
+
+
             let response = template.toString();
-            res.status(200).type('html').send(response); // is this correct thing / time to send right here
+            let i;
+            let list_items = '<th>Year</th>';
+            //for (i = 0; i < 10; i++) {
+            //    console.log(rows[i]);
+            //}
+
+            for (i = 0; i < rows.length; i++) {
+                list_items += '<th>' + rows[i].state_abbreviation + '</th>';
+            }
+
+            for (i = 0; i < rows.length; i++) {
+
+                list_items += '<tr><td>' + rows[i].year + '</td>\n' + '<td>' + rows[i][energy_source] + '</td></tr>\n';
+                
+            } 
+
+
+            console.log(rows[0]);
+
+
+            response = response.replace(/{{{YEARS}}}/g, list_items);
+
+
+
+            res.status(200).type('html').send(response);
+
         });
 
+        //res.status(200).type('html').send(template); // <-- you may need to change this
     });
 });
 

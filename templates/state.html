@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>US Energy Consumption</title>
     <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="application/javascript">
         // `state` and arrays of consumption per year => set these variables equal to appropriate value
         //   * these variables will be defined and accessible from any script loaded after this one
-        var state = {{{STATE}}};
+        //var state = {{{STATE}}};
         var coal_counts = {{{COAL_COUNTS}}};               // array - value per year (e.g. [1234, 2567, ...])
         var natural_gas_counts = {{{NATURAL_GAS_COUNTS}}}; // array - value per year (e.g. [1234, 2567, ...])
         var nuclear_counts = {{{NUCLEAR_COUNTS}}};         // array - value per year (e.g. [1234, 2567, ...])
@@ -17,6 +18,75 @@
     </script>
 </head>
 <body>
+
+
+    <div class="container" >
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script type="application/javascript">
+        //let year = 2001;
+        let myChart = document.getElementById('myChart').getContext('2d');
+        let massPopChart = new Chart(myChart, {
+            type: 'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+            data: {
+                labels:['Coal', 'Natural', 'Nuclear', 'Petroleum', 'Renewable'],
+                datasets:[{
+                    label:'Total Energy',
+                    data:[
+                        coal_counts,
+                        natural_gas_counts,
+                        nuclear_counts,
+                        petroleum_counts,
+                        renewable_counts
+                    ],
+                    //backgroundColor: 'blue'
+                    backgroundColor: [
+                        'green', 
+                        'blue',
+                        'yellow',
+                        'red',
+                        'purple'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true, 
+                        text: 'Total Energy Consumption'
+                    },
+                    tooltip: {
+                        mode: 'index'
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year'
+                        }
+                    },
+                    y: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Value'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+
     <!-- create template here -->
 
     <div class="navigation">
@@ -70,5 +140,28 @@
     </div>
 
     <h1>{{{STATE}}}</h1>
+
+
+
+    <table>
+
+        <tr>
+            <th>Year</th>
+            <th>Coal</th>
+            <th>Natural Gas</th>
+            <th>Nuclear</th>
+            <th>Petroleum</th>
+            <th>Renewable</th>
+            <th>Total</th>
+        </tr>
+        <tr>
+            {{{YEARS}}}
+            
+        </tr>
+    </table>
+
+
+
+
 </body>
 </html>
