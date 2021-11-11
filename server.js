@@ -6,6 +6,7 @@ let path = require('path');
 let express = require('express');
 let sqlite3 = require('sqlite3');
 let chart = require('chart.js');
+const e = require('express');
 
 
 let public_dir = path.join(__dirname, 'public');
@@ -169,42 +170,21 @@ app.get('/energy/:selected_energy_source', (req, res) => {
         // this will require a query to the SQL database
 
         let energy_source = req.params.selected_energy_source;
-    
+        db.all('SELECT * from Consumption ORDER BY year, state_abbreviation', (err, rows) => { 
+         
 
-        db.all('SELECT * from Consumption', (err, rows) => { 
-            // console.log("input is: " + energy_source);
-            //console.log("First source is: " + rows[0].coal);
-    
-                    let k;
-                    for (k = 0; k < 100; k++) {
-                        console.log(rows[k]);
-                    }
-    
-    
                 db.all('SELECT DISTINCT year from Consumption', (err, years) => {
     
                     let response = template.toString();
     
-    
-    
-                    /*let k;
-                    for (k = 0; k < 100; k++) {
-                        console.log(rows[k]);
-                    }*/
+                   
                 
                 
                     db.all('SELECT * from States', (err,row) => {
                         let i;
                         let list_items= '<th>Year</th>';
                         let year = "";
-                        let coal_total = 0;
-                        let natural_total = 0;
-                        let nuclear_total = 0;
-                        let petroleum_total = 0;
-                        let renewable_total = 0;
-    
-                        console.log("Rows is: " + rows.length);
-                        console.log("Row is :" + row.length);
+                       
     
     
                         for (i = 0; i < row.length; i++) {
@@ -214,8 +194,7 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                         }
     
                         response = response.replace(/{{{HEADER}}}/g, list_items);
-    
-                        list_items = '<td>' + energy_source.toUpperCase() + '</td>';
+                        list_items = '<td></td>';
     
     
                         for (j = 0; j < years.length; j++) {
@@ -225,24 +204,14 @@ app.get('/energy/:selected_energy_source', (req, res) => {
     
                             for (i = 0; i < 51; i++) {
     
-                                //coal_total = coal_total + parseInt(rows[i].coal);
-                                //natural_total = natural_total + parseInt(rows[i].natural_gas);
-                                //nuclear_total = nuclear_total + parseInt(rows[i].nuclear);
-                                //petroleum_total = petroleum_total + parseInt(rows[i].petroleum);
-                                //renewable_total = renewable_total + parseInt(rows[i].renewable);
-                                //let total = parseInt(rows[i].coal) + parseInt(rows[i].natural_gas) + parseInt(rows[i].nuclear) + parseInt(rows[i].petroleum) + parseInt(rows[i].renewable);
+                                
                                 list_items += '<td>' + rows[(j*51) + i].coal + '</td>';
                             }
                             list_items += '</tr>';
                         }
             
                         console.log(rows[2]);
-                        response = response.replace(/{{{YEAR}}}/g, year);
-                        //response = response.replace(/{{{COAL_COUNTS}}}/g, coal_total); 
-                        //response = response.replace(/{{{NATURAL_GAS_COUNTS}}}/g, natural_total);
-                        //response = response.replace(/{{{NUCLEAR_COUNTS}}}/g, nuclear_total);
-                        //response = response.replace(/{{{PETROLEUM_COUNTS}}}/g, petroleum_total);
-                        //response = response.replace(/{{{RENEWABLE_COUNTS}}}/g, renewable_total);    
+                        response = response.replace(/{{{HEADER}}}/g, year);  
                         response = response.replace(/{{{YEARS}}}/g, list_items);
                         console.log(list_items[0]);
                         res.status(200).type('html').send(response);
@@ -254,7 +223,8 @@ app.get('/energy/:selected_energy_source', (req, res) => {
             
             });
 
-        //res.status(200).type('html').send(template); // <-- you may need to change this
+        
+
     });
 });
 
