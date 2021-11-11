@@ -117,24 +117,27 @@ app.get('/state/:selected_state', (req, res) => {
                 //for (k = 0; k < 100; k++) {
                 //    console.log(rows[k]);
                 //}
-
+                let year_list = [];
+                let total_list = [];
                 let i;
                     let list_items= '';
                     let year = "";
-                    let coal_total = 0;
-                    let natural_total = 0;
-                    let nuclear_total = 0;
-                    let petroleum_total = 0;
-                    let renewable_total = 0;
+                    let coal_total = [];
+                    let natural_total = [];
+                    let nuclear_total = [];
+                    let petroleum_total = [];
+                    let renewable_total = [];
                     console.log(rows[0].year);
                     console.log(rows[0].coal);
                     for (i = 0; i < rows.length; i++) {
-                        coal_total = coal_total + parseInt(rows[i].coal);
-                        natural_total = natural_total + parseInt(rows[i].natural_gas);
-                        nuclear_total = nuclear_total + parseInt(rows[i].nuclear);
-                        petroleum_total = petroleum_total + parseInt(rows[i].petroleum);
-                        renewable_total = renewable_total + parseInt(rows[i].renewable);
+                        year_list.push('' + rows[i].year);
+                        coal_total.push(rows[i].coal);
+                        natural_total.push(rows[i].natural_gas);
+                        nuclear_total.push(rows[i].nuclear);
+                        petroleum_total.push(rows[i].petroleum);
+                        renewable_total.push(rows[i].renewable);
                         let total = parseInt(rows[i].coal) + parseInt(rows[i].natural_gas) + parseInt(rows[i].nuclear) + parseInt(rows[i].petroleum) + parseInt(rows[i].renewable);
+                        total_list.push(total);
                         list_items += '<tr><td>' +  rows[i].year + '</td>\n' + '<td>' + rows[i].coal + '</td>\n' + '<td>' + rows[i].natural_gas + '</td>\n' + '<td>' + rows[i].nuclear + '</td>\n' + '<td>' + rows[i].petroleum + '</td>\n' + '<td>' + rows[i].renewable + '</td>\n' + '<td>' + total + '</td></tr>\n';
                     }
 
@@ -146,8 +149,9 @@ app.get('/state/:selected_state', (req, res) => {
                 response = response.replace(/{{{NUCLEAR_COUNTS}}}/g, nuclear_total);
                 response = response.replace(/{{{PETROLEUM_COUNTS}}}/g, petroleum_total);
                 response = response.replace(/{{{RENEWABLE_COUNTS}}}/g, renewable_total);    
+                response = response.replace(/{{{TOTAL}}}/g, total_list);  
                 response = response.replace(/{{{STATE}}}/g, req.params.selected_state.toUpperCase());
-                console.log(list_items[0]);
+                response = response.replace(/{{{YEAR_LIST}}}/g, year_list);
                 response = response.replace('{{{YEARS}}}', list_items);
                 res.status(200).type('html').send(response);
 

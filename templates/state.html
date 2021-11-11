@@ -10,84 +10,15 @@
         // `state` and arrays of consumption per year => set these variables equal to appropriate value
         //   * these variables will be defined and accessible from any script loaded after this one
         //var state = {{{STATE}}};
-        var coal_counts = {{{COAL_COUNTS}}};               // array - value per year (e.g. [1234, 2567, ...])
-        var natural_gas_counts = {{{NATURAL_GAS_COUNTS}}}; // array - value per year (e.g. [1234, 2567, ...])
-        var nuclear_counts = {{{NUCLEAR_COUNTS}}};         // array - value per year (e.g. [1234, 2567, ...])
-        var petroleum_counts = {{{PETROLEUM_COUNTS}}};     // array - value per year (e.g. [1234, 2567, ...])
-        var renewable_counts = {{{RENEWABLE_COUNTS}}};     // array - value per year (e.g. [1234, 2567, ...])
+        var coal_counts = [{{{COAL_COUNTS}}}];               // array - value per year (e.g. [1234, 2567, ...])
+        var natural_gas_counts = [{{{NATURAL_GAS_COUNTS}}}]; // array - value per year (e.g. [1234, 2567, ...])
+        var nuclear_counts = [{{{NUCLEAR_COUNTS}}}];         // array - value per year (e.g. [1234, 2567, ...])
+        var petroleum_counts = [{{{PETROLEUM_COUNTS}}}];     // array - value per year (e.g. [1234, 2567, ...])
+        var renewable_counts = [{{{RENEWABLE_COUNTS}}}];     // array - value per year (e.g. [1234, 2567, ...])
+        var total_energy = [{{{TOTAL}}}];
     </script>
 </head>
 <body>
-
-
-    <div class="container" >
-        <canvas id="myChart"></canvas>
-    </div>
-
-    <script type="application/javascript">
-        //let year = 2001;
-        let myChart = document.getElementById('myChart').getContext('2d');
-        let massPopChart = new Chart(myChart, {
-            type: 'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
-            data: {
-                labels:['Coal', 'Natural', 'Nuclear', 'Petroleum', 'Renewable'],
-                datasets:[{
-                    label:'Total Energy',
-                    data:[
-                        coal_counts,
-                        natural_gas_counts,
-                        nuclear_counts,
-                        petroleum_counts,
-                        renewable_counts
-                    ],
-                    //backgroundColor: 'blue'
-                    backgroundColor: [
-                        'green', 
-                        'blue',
-                        'yellow',
-                        'red',
-                        'purple'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    title: {
-                        display: true, 
-                        text: 'Total Energy Consumption'
-                    },
-                    tooltip: {
-                        mode: 'index'
-                    }
-                },
-                interaction: {
-                    mode: 'nearest',
-                    axis: 'x',
-                    intersect: false
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Year'
-                        }
-                    },
-                    y: {
-                        stacked: true,
-                        title: {
-                            display: true,
-                            text: 'Value'
-                        }
-                    }
-                }
-            }
-        });
-    </script>
-
-
-    <!-- create template here -->
 
     <div class="navigation">
         <div class="dropdown">
@@ -121,7 +52,6 @@
                     let new_link = document.createElement("a")
                     new_link.textContent = states[i];
                     new_link.href = "/state/" + states_abbrev[i];
-                    console.log(new_link)
                     new_li.appendChild(new_link)
                     element_state.appendChild(new_li);
                 }
@@ -138,6 +68,109 @@
             </div>
         </div>
     </div>
+
+
+
+    <div class="container" >
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script type="application/javascript">
+        let coal_final = [];
+        let natural_gas_final = [];
+        let nuclear_final = [];
+        let petroleum_final = [];
+        let renewable_final = [];
+        for(let i = 0; i<total_energy.length; i++){
+            coal_final.push(coal_counts[i]/total_energy[i]*100)
+            natural_gas_final.push(natural_gas_counts[i]/total_energy[i]*100)
+            nuclear_final.push(nuclear_counts[i]/total_energy[i]*100)
+            petroleum_final.push(petroleum_counts[i]/total_energy[i]*100)
+            renewable_final.push(renewable_counts[i]/total_energy[i]*100)
+        }
+        
+
+
+        let myChart = document.getElementById('myChart').getContext('2d');
+        let massPopChart = new Chart(myChart, {
+            type: 'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+            data: {
+                labels:[{{{YEAR_LIST}}}],
+                datasets:[
+                    {
+                        label:'Coal',
+                        data: coal_final,
+                        backgroundColor: 'green',
+                        fill: true
+                    },
+                    {
+                        label:'Natural Gas',
+                        data: natural_gas_final,
+                        backgroundColor: 'blue',
+                        fill: true
+                    },
+                    {
+                        label:'Nuclear',
+                        data: nuclear_final,
+                        backgroundColor: 'yellow',
+                        fill: true
+                    },
+                    {
+                        label:'Petroleum',
+                        data: petroleum_final,
+                        backgroundColor: 'red',
+                        fill: true
+                    },
+                    {
+                        label:'Renewable',
+                        data: renewable_final,
+                        backgroundColor: 'purple',
+                        fill: true
+                    },
+                ],
+            },
+            options: {
+                
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true, 
+                        text: 'State Energy Percentages'
+                    },
+                    tooltip: {
+                        mode: 'index'
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year'
+                        }
+                    },
+                    y: {
+                       max: 100,
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Value'
+                        }
+                    },
+                }
+            }
+        });
+    </script>
+
+
+    <!-- create template here -->
+
+    
 
     <h1>{{{STATE}}}</h1>
 
