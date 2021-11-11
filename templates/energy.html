@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>US Energy Consumption</title>
     <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="application/javascript">
         // `energy_type` and object of consumption per year per state => set these variables equal to appropriate value
         //   * these variables will be defined and accessible from any script loaded after this one
-        //var energy_type = {{{ENERGY_TYPE}}};
-        //var energy_counts = {{{ENERGY_COUNTS}}}; // dictionary of arrays (e.g. {AK: [...], AL: [...], AR: [...], ...})
+        var energy_type = '{{{ENERGY_TYPE}}}';
+        var energy_counts = {{{ENERGY_COUNTS}}}; // dictionary of arrays (e.g. {AK: [...], AL: [...], AR: [...], ...})
     </script>
 </head>
 <body>
@@ -46,7 +47,6 @@
                     let new_link = document.createElement("a")
                     new_link.textContent = states[i];
                     new_link.href = "/state/" + states_abbrev[i];
-                    console.log(new_link)
                     new_li.appendChild(new_link)
                     element_state.appendChild(new_li);
                 }
@@ -64,6 +64,42 @@
         </div>
     </div>
 
+
+    <div class="container" >
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script type="application/javascript">
+        //let year = 2001;
+        let myChart = document.getElementById('myChart').getContext('2d');
+        let massPopChart = new Chart(myChart, {
+            type: 'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+            data: {
+                labels:[{{{YEAR_LIST}}}],
+                datasets:[{
+                    label:[
+                    ],
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true, 
+                        text: 'Total Energy Consumption'
+                    }
+                }
+            }
+        });
+
+        console.log(energy_counts.AK)
+        for( let i = 0; i<energy_counts.length; i++){
+            massPopChart.data.label.push(energy_counts[i].keys());
+            console.log(energy_counts[i].keys())
+        }
+        
+
+    </script>
 
 
     <table>

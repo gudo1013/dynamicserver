@@ -168,7 +168,6 @@ app.get('/state/:selected_state', (req, res) => {
 
 // GET request handler for '/energy/*'
 app.get('/energy/:selected_energy_source', (req, res) => {
-    console.log(req.params.selected_energy_source);
     fs.readFile(path.join(template_dir, 'energy.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
@@ -187,9 +186,12 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                     db.all('SELECT * from States', (err,row) => {
                         let i;
                         let list_items= '<th>Year</th>';
+                        let year_list = [];
                         let year = "";
-                       
-    
+                        let energy_counts = {};
+                        for (let e = 0; e < row.length; e++){
+                            energy_counts[row[e]["state_abbreviation"]] = [];
+                        }
     
                         for (i = 0; i < row.length; i++) {
     
@@ -203,21 +205,23 @@ app.get('/energy/:selected_energy_source', (req, res) => {
     
                         for (j = 0; j < years.length; j++) {
     
-    
+                            year_list.push('' + years[j].year);
                             list_items += '<tr><td>' + years[j].year + '</td>'
     
                             for (i = 0; i < 51; i++) {
     
-                                
-                                list_items += '<td>' + rows[(j*51) + i][energy_source] + '</td>';
+                                new_element = rows[(j*51) + i];
+                                energy_counts[new_element["state_abbreviation"]].push(new_element[energy_source]);
+                                list_items += '<td>' + new_element[energy_source] + '</td>';
                             }
                             list_items += '</tr>';
                         }
             
-                        console.log(rows[2]);
                         response = response.replace(/{{{HEADER}}}/g, year);  
                         response = response.replace(/{{{YEARS}}}/g, list_items);
-                        console.log(list_items[0]);
+                        response = response.replace(/{{{ENERGY_COUNTS}}}/g, JSON.stringify(energy_counts));  
+                        response = response.replace(/{{{ENERGY_TYPE}}}/g, energy_source);
+                        response = response.replace(/{{{YEAR_LIST}}}/g, year_list);
                         res.status(200).type('html').send(response);
                     });
     
