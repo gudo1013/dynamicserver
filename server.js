@@ -40,7 +40,6 @@ app.get('/', (req, res) => {
 
 // GET request handler for '/year/*'
 app.get('/year/:selected_year', (req, res) => {
-    console.log(req.params.selected_year);
     fs.readFile(path.join(template_dir, 'year.html'), 'utf-8', (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
@@ -99,7 +98,6 @@ app.get('/year/:selected_year', (req, res) => {
 
 // GET request handler for '/state/*'
 app.get('/state/:selected_state', (req, res) => {
-    console.log(req.params.selected_state);
     fs.readFile(path.join(template_dir, 'state.html'), (err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
@@ -148,7 +146,6 @@ app.get('/state/:selected_state', (req, res) => {
 
 
 
-                    console.log(coal_total);
                     response = response.replace(/{{{YEAR}}}/g, year);
                     response = response.replace(/{{{COAL_COUNTS}}}/g, coal_total); 
                     response = response.replace(/{{{NATURAL_GAS_COUNTS}}}/g, natural_total);
