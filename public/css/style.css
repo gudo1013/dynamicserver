@@ -1,14 +1,24 @@
 /* Custom CSS Rules */
 
-table, th, td {
+
+
+
+table, th, td  {
 
     border: 1px solid black;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    
+    padding: 5px;
+
 
 }
+
+
+
+tr:nth-child(even) {background-color: #f0ebeb;}
+
+
 
 .container {
 
@@ -24,7 +34,7 @@ h1 {
     
 .navigation {
     width: 100%;
-    background-color: gray;
+    background-color: gainsboro;
     text-align: center;
 }
 

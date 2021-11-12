@@ -116,47 +116,59 @@ app.get('/state/:selected_state', (req, res) => {
                 //let k;
                 //for (k = 0; k < 100; k++) {
                 //    console.log(rows[k]);
-                //}
-                let year_list = [];
-                let total_list = [];
-                let i;
-                    let list_items= '';
-                    let year = "";
-                    let coal_total = [];
-                    let natural_total = [];
-                    let nuclear_total = [];
-                    let petroleum_total = [];
-                    let renewable_total = [];
-                    for (i = 0; i < rows.length; i++) {
-                        year_list.push('' + rows[i].year);
-                        coal_total.push(rows[i].coal);
-                        natural_total.push(rows[i].natural_gas);
-                        nuclear_total.push(rows[i].nuclear);
-                        petroleum_total.push(rows[i].petroleum);
-                        renewable_total.push(rows[i].renewable);
-                        let total = parseInt(rows[i].coal) + parseInt(rows[i].natural_gas) + parseInt(rows[i].nuclear) + parseInt(rows[i].petroleum) + parseInt(rows[i].renewable);
-                        total_list.push(total);
-                        list_items += '<tr><td>' +  rows[i].year + '</td>\n' + '<td>' + rows[i].coal + '</td>\n' + '<td>' + rows[i].natural_gas + '</td>\n' + '<td>' + rows[i].nuclear + '</td>\n' + '<td>' + rows[i].petroleum + '</td>\n' + '<td>' + rows[i].renewable + '</td>\n' + '<td>' + total + '</td></tr>\n';
-                    }
+                let state_fullname = '';
+
+                db.all('SELECT state_name from States WHERE state_abbreviation =?', [req.params.selected_state.toUpperCase()], (err, names) => {
+                    
+                    //state_fullname = names[0].state_name
+
+                
+                    //}
+                    let year_list = [];
+                    let total_list = [];
+                    let i;
+                        let list_items= '';
+                        let year = "";
+                        let coal_total = [];
+                        let natural_total = [];
+                        let nuclear_total = [];
+                        let petroleum_total = [];
+                        let renewable_total = [];
+                        for (i = 0; i < rows.length; i++) {
+                            year_list.push('' + rows[i].year);
+                            coal_total.push(rows[i].coal);
+                            natural_total.push(rows[i].natural_gas);
+                            nuclear_total.push(rows[i].nuclear);
+                            petroleum_total.push(rows[i].petroleum);
+                            renewable_total.push(rows[i].renewable);
+                            let total = parseInt(rows[i].coal) + parseInt(rows[i].natural_gas) + parseInt(rows[i].nuclear) + parseInt(rows[i].petroleum) + parseInt(rows[i].renewable);
+                            total_list.push(total);
+                            list_items += '<tr><td>' +  rows[i].year + '</td>\n' + '<td>' + rows[i].coal + '</td>\n' + '<td>' + rows[i].natural_gas + '</td>\n' + '<td>' + rows[i].nuclear + '</td>\n' + '<td>' + rows[i].petroleum + '</td>\n' + '<td>' + rows[i].renewable + '</td>\n' + '<td>' + total + '</td></tr>\n';
+                        }
 
 
-                console.log(coal_total);
-                response = response.replace(/{{{YEAR}}}/g, year);
-                response = response.replace(/{{{COAL_COUNTS}}}/g, coal_total); 
-                response = response.replace(/{{{NATURAL_GAS_COUNTS}}}/g, natural_total);
-                response = response.replace(/{{{NUCLEAR_COUNTS}}}/g, nuclear_total);
-                response = response.replace(/{{{PETROLEUM_COUNTS}}}/g, petroleum_total);
-                response = response.replace(/{{{RENEWABLE_COUNTS}}}/g, renewable_total);    
-                response = response.replace(/{{{TOTAL}}}/g, total_list);  
-                response = response.replace(/{{{STATE}}}/g, req.params.selected_state.toUpperCase());
-                response = response.replace(/{{{YEAR_LIST}}}/g, year_list);
-                response = response.replace('{{{YEARS}}}', list_items);
-                res.status(200).type('html').send(response);
 
+                    console.log(coal_total);
+                    response = response.replace(/{{{YEAR}}}/g, year);
+                    response = response.replace(/{{{COAL_COUNTS}}}/g, coal_total); 
+                    response = response.replace(/{{{NATURAL_GAS_COUNTS}}}/g, natural_total);
+                    response = response.replace(/{{{NUCLEAR_COUNTS}}}/g, nuclear_total);
+                    response = response.replace(/{{{PETROLEUM_COUNTS}}}/g, petroleum_total);
+                    response = response.replace(/{{{RENEWABLE_COUNTS}}}/g, renewable_total);    
+                    response = response.replace(/{{{TOTAL}}}/g, total_list);  
+                    response = response.replace(/{{{STATE}}}/g, names[0].state_name);
+                    response = response.replace(/{{{YEAR_LIST}}}/g, year_list);
+                    response = response.replace('{{{YEARS}}}', list_items);
+                    response = response.replace(/{{{STATE_FLAG}}}/g, ('/public/imgs/' + (req.params.selected_state.toLowerCase() + '.png')));
+                    response = response.replace(/{{{ALT_TEXT}}}/g, (names[0].state_name + ' Flag'));
+
+                    res.status(200).type('html').send(response);
+
+                
+
+                });
 
             });
-
-
             
         }//else
 
@@ -220,6 +232,10 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                         response = response.replace(/{{{ENERGY_COUNTS}}}/g, JSON.stringify(energy_counts));  
                         response = response.replace(/{{{ENERGY_TYPE}}}/g, energy_source);
                         response = response.replace(/{{{YEAR_LIST}}}/g, year_list);
+                        response = response.replace(/{{{ENERGY_PICTURE}}}/g, ('/public/imgs/' + energy_source + '.jpg'));
+                        response = response.replace(/{{{ENERGY_ALT}}}/g, ( energy_source + " picture"));
+
+
                         res.status(200).type('html').send(response);
                     });
     
