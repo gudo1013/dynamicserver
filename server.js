@@ -7,6 +7,7 @@ let express = require('express');
 let sqlite3 = require('sqlite3');
 let chart = require('chart.js');
 const e = require('express');
+const { exit } = require('process');
 
 
 let public_dir = path.join(__dirname, 'public');
@@ -51,9 +52,9 @@ app.get('/year/:selected_year', (req, res) => {
             let response = template.replace(/{{{YEAR}}}/g, req.params.selected_year);
             db.all('SELECT * from Consumption WHERE year = ? ORDER BY state_abbreviation', [req.params.selected_year], (err, row) => {
 
-
+                
                 if (err) {
-                    res.status(404).send("Could not finish query");
+                    res.status(404).send('404 Error not found');
                 } else {
                 //response = response.replace(/{{{COAL_COUNT}}}/g, row[0].coal); 
                 //response = response.replace('{{{NATURAL_GAS_COUNT}}}', row[0].natural_gas);
@@ -61,6 +62,11 @@ app.get('/year/:selected_year', (req, res) => {
                 //response = response.replace('{{{PETROLEUM_COUNT}}}', row[0].petroleum);
                 //response = response.replace('{{{RENEWABLE_COUNT}}}', row[0].renewable);
                 db.all('SELECT state_name from States', (err, rows) => {
+                    if(req.params.selected_year > 2018 || req.params.selected_year < 1960) {
+                        res.status(404).type('text').send("Error: the year " + req.params.selected_year + " does not have data");
+                        return;
+                    }
+                    
                     //console.log(rows[0])
                     let i;
                     let list_items= '';
@@ -120,8 +126,15 @@ app.get('/state/:selected_state', (req, res) => {
                 db.all('SELECT state_name from States WHERE state_abbreviation =?', [req.params.selected_state.toUpperCase()], (err, names) => {
                     
                     //state_fullname = names[0].state_name
-
-                
+                    if(err){
+                        res.status(404).send('404 Error not found');
+                    }
+                    if (names.length==0) {
+                        res.status(404).send('Error: the state with abbreviation ' + req.params.selected_state.toUpperCase() + ' does not exist');
+                        return;
+                    }//if
+                    
+                    else{
                     //}
                     let year_list = [];
                     let total_list = [];
@@ -163,7 +176,7 @@ app.get('/state/:selected_state', (req, res) => {
                     res.status(200).type('html').send(response);
 
                 
-
+                    }
                 });
 
             });
@@ -181,6 +194,7 @@ app.get('/energy/:selected_energy_source', (req, res) => {
         // this will require a query to the SQL database
 
         let energy_source = req.params.selected_energy_source;
+        
         db.all('SELECT * from Consumption ORDER BY year, state_abbreviation', (err, rows) => { 
          
 
@@ -188,7 +202,10 @@ app.get('/energy/:selected_energy_source', (req, res) => {
     
                     let response = template.toString();
     
-                   
+                    if (rows[0][energy_source] == undefined) {
+                        res.status(404).send('Error: selected energy type of ' + energy_source + ' does not exist');
+                        return;
+                    }//if
                 
                 
                     db.all('SELECT * from States', (err,row) => {
