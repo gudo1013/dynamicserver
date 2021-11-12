@@ -13,10 +13,11 @@ let public_dir = path.join(__dirname, 'public');
 let template_dir = path.join(__dirname, 'templates');
 let db_filename = path.join(__dirname, 'db', 'usenergy.sqlite3');
 
+
 let app = express();
 let port = 8000;
 
-
+app.use("/public", express.static(path.join(__dirname, 'public')));
 
 
 // Open usenergy.sqlite3 database
